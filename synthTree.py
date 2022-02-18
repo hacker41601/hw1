@@ -51,7 +51,7 @@ def ID3(data,trainData,features,target = "ans",rootNode = None):
     if len(np.unique(data[target])) <= 1:
         return np.unique(data[target])[0]
     #if number of pred attr is NULL then ret single node root with label = most common val of target attr in ex
-    elif len(features) ==0:
+    elif len(features) == 0:
         return rootNode
     #else: begin
     else:
@@ -117,6 +117,12 @@ def test(data, decTree, target):
 
 synth = pd.read_csv('synthetic-1.csv', header = None)
 #print(synth)
+#https://stackoverflow.com/questions/23594262/binning-values-of-a-function-in-python-numpy
+#https://numpy.org/devdocs/reference/generated/numpy.linspace.html
+#https://www.statology.org/numpy-digitize/
+
+#*** CAROLINE JORDAN AND THOMAS DIMENY HELPED ME WITH BINNING ***
+
 for i in range(len(synth)):
     
     max0 = synth.iloc[:,0].max()
