@@ -164,6 +164,8 @@ synth = pd.read_csv('synthetic-1.csv', header = None)
 print('SYNTH - 1: ')
 decTree1 = ID3(binned,binned,binned.columns[:-1])
 test(binned,decTree1, "ans")
+from pprint import pprint
+import pprint
 #pp = pprint.PrettyPrinter(compact=True)
 #pp.pprint(decTree1)
 print('###################################################################s#')
