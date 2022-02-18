@@ -76,8 +76,8 @@ def ID3(data,trainData,features,target = "ans",rootNode = None):
                     #add leaf to this branch with label = most common target val in the ex
             #else:
                     #below this branch add subdecTree ID3(ex(v), target, attr-{A})
-            sub_data = data.where(data[bestFeatVal] == val).dropna()
-            subdecTree = ID3(sub_data,trainData,features,target,rootNode)
+            branch = data.where(data[bestFeatVal] == val).dropna()
+            subdecTree = ID3(branch,trainData,features,target,rootNode)
             decTree[bestFeatVal][val] = subdecTree
         #end
         #return Root
