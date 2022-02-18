@@ -264,6 +264,10 @@ for i in range(len(pokemon)):
 #this is the one with max depth 3 bc there is only two columns
 decTree = ID3(binned,binned,binned.columns[:-1])
 test(binned,decTree, "Legendary")
+from pprint import pprint
+import pprint
+#pp = pprint.PrettyPrinter(compact=True)
+#pp.pprint(decTree)
 
 #how to make decision surface - ish
 #https://jakevdp.github.io/PythonDataScienceHandbook/04.04-density-and-contour-plots.html
