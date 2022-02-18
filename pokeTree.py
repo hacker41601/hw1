@@ -17,8 +17,9 @@ poke.to_csv("testPKMN.csv", index = False)
 pokemon = pd.read_csv('testPKMN.csv', names=['Total','HP','Attack','Defense','Sp. Atk','Sp. Def','Speed','Generation','Type 1_Bug','Type 1_Dark','Type 1_Dragon','Type 1_Electric','Type 1_Fairy','Type 1_Fighting','Type 1_Fire','Type 1_Flying','Type 1_Ghost','Type 1_Grass','Type 1_Ground','Type 1_Ice','Type 1_Normal','Type 1_Poison','Type 1_Psychic','Type 1_Rock','Type 1_Steel','Type 1_Water','Type 2_Bug','Type 2_Dark','Type 2_Dragon','Type 2_Electric','Type 2_Fairy','Type 2_Fighting','Type 2_Fire','Type 2_Flying','Type 2_Ghost','Type 2_Grass','Type 2_Ground','Type 2_Ice','Type 2_Normal','Type 2_Poison','Type 2_Psychic','Type 2_Rock','Type 2_Steel','Type 2_Water', 'Legendary'])
 
 pokemon = pd.read_csv('testPKMN.csv')
-print(pokemon)
 #print(pokemon)
+#print(pokemon)
+#this is for the first 7 since after that when it comes to generation, it gets all messed up
 for i in range(len(pokemon)):
     
     max0 = pokemon.iloc[:,0].max()
@@ -86,8 +87,8 @@ for i in range(len(pokemon)):
     #binned.to_csv('pokemon_BINNED.csv'.format(i))
     #data = {
     
-    binned = pd.DataFrame({'col1': binned0.tolist(), 'col2': binned1.tolist(), 'col3': binned0.tolist(), 'col4': binned1.tolist(), 'col5': binned0.tolist(), 'col6': binned1.tolist(), 'col7': binned0.tolist(), 'col8': binned1.tolist(), 'Legendary': pokemon.iloc[:,44]})
-print(binned)
+    binned = pd.DataFrame({'col1': binned0.tolist(), 'col2': binned1.tolist(), 'col3': binned2.tolist(), 'col4': binned3.tolist(), 'col5': binned4.tolist(), 'col6': binned5.tolist(), 'col7': binned6.tolist(), 'col8': binned7.tolist(), 'Legendary': pokemon.iloc[:,44]})
+#print(binned)
 
 def calculate_entropy(column_name):
         entropy = 0
@@ -159,6 +160,7 @@ def ID3(data,trainData,features,target = "Legendary",rootNode = None):
             #kept getting nans at this point had to include .dropna()
             #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
                 branch = data.where(data[bestFeat] == best_val).dropna()
+                #features at this point is the same as attr-{A}
                 subdecTree = ID3(branch,trainData,features,target,rootNode)
                 decTree[bestFeat][best_val] = subdecTree
         #end
@@ -193,6 +195,72 @@ def test(data, decTree, target):
     #print(prediction)
     print('Accuracy: ',pred*100,'%')
 
+print(("\n"))
+print(("                                      |\n"))
+print(("                                     /|\n"))
+print(("                                   ,' |\n"))
+print(("                                  .   |\n"))
+print(("                                    | |\n"))
+print(("                                 ' '| |\n"))
+print(("                                / / | |\n"))
+print(("       _,.-\"\"--._              / /  | |\n"))
+print(("     ,'          `.           j '   ' '\n"))
+print(("   ,'              `.         ||   / ,                         ___..--,\n"))
+print(("  /                  \\        ' `.'`.-.,-\".  .       _..---\"\"'' __, ,'\n"))
+print((" /                    \\        \\` .\"`      `\"'\\   ,'\"_..--''\"\"\"'.'.'\n"))
+print((".                      .      .'-'             \\,' ,'         ,','\n"))
+print(("|                      |      ,`               ' .`         .' /\n"))
+print(("|                      |     /          ,\"`.  ' `-. _____.-' .'\n"))
+print(("'                      |..---.|,\".      | | .  .-'\"\"   __.,-'\n"))
+print((" .                   ,'       ||,|      |.' |    |\"\"`'\"\n"))
+print(("  `-._   `._.._____  |        || |      `._,'    |\n"))
+print(("      `.   .       `\".     ,'\"| \"  `'           ,+.\n"))
+print(("        \\  '         |    '   |   .....        .'  `.\n"))
+print(("         .'          '     7  \".              ,'     \\\n"))
+print(("                   ,'      |    `..        _,'      F\n"))
+print(("                  .        |,      `'----''         |\n"))
+print(("                  |      ,\"j  /                   | '\n"))
+print(("                  `     |  | .                 | `,'\n"))
+print(("                   .    |  `.|                 |/\n"))
+print(("                    `-..'   ,'                .'\n"))
+print(("                            | \\             ,''\n"))
+print(("                            |  `,'.      _,' /\n"))
+print(("                            |    | ^.  .'   /\n"))
+print(("                             `-'.' j` V    /\n"))
+print(("                                   |      /\n"))
+print(("                                   |     /\n"))
+print(("                                   |   ,'\n"))
+print(("                                    `\"\"\n"))
 print('GOTTA CATCH EM ALL: ')
+#decTree = ID3(binned,binned,binned.columns[:-1])
+#test(binned,decTree, "Legendary")
+
+for i in range(len(pokemon)):
+    
+    max0 = pokemon.iloc[:,0].max()
+    max4 = pokemon.iloc[:,4].max()
+    min0 = pokemon.iloc[:,0].min()
+    min4 = pokemon.iloc[:,4].min()
+    
+    interval0 = np.linspace(min0, max0, 5)
+    interval4 = np.linspace(min4, max4, 5)
+    
+    col0 = pokemon.iloc[:,0].values
+    col4 = pokemon.iloc[:,4].values
+    
+    binned0 = np.digitize(col0, interval0)
+    binned4 = np.digitize(col4, interval4)
+    
+    #binned = pd.DataFrame()
+    #binned['col1'] = binned0.tolist()
+    #binned['col2'] = binned1.tolist()
+    #binned['ans'] = pokemon.iloc[:,2].to_list()
+    #print(binned)
+    #binned.to_csv('pokemon_BINNED.csv'.format(i))
+    #data = {
+    
+    binned = pd.DataFrame({'total': binned0.tolist(), 'sp.attack': binned4.tolist(), 'Legendary': pokemon.iloc[:,44]})
+
+#this is the one with max depth 3 bc there is only two columns
 decTree = ID3(binned,binned,binned.columns[:-1])
 test(binned,decTree, "Legendary")
