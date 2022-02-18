@@ -20,6 +20,34 @@ synth3.rename(columns = {0: 'col1', 1: 'col2', 2: 'ans'}, inplace = True)
 synth4 = pd.read_csv('synthetic-4.csv', header = None)
 synth4.rename(columns = {0: 'col1', 1: 'col2', 2: 'ans'}, inplace = True)
 
+synth = pd.read_csv('synthetic-1.csv', header = None)
+
+for i in range(len(synth)):
+    
+    max0 = synth.iloc[:,0].max()
+    max1 = synth.iloc[:,1].max()
+    min0 = synth.iloc[:,0].min()
+    min1 = synth.iloc[:,1].min()
+    
+    interval0 = np.linspace(min0, max0, 5)
+    interval1 = np.linspace(min1, max1, 5)
+    
+    col0 = synth.iloc[:,0].values
+    col1 = synth.iloc[:,1].values
+    
+    binned0 = np.digitize(col0, interval0)
+    binned1 = np.digitize(col1, interval1)
+    
+    #binned = pd.DataFrame()
+    #binned['col1'] = binned0.tolist()
+    #binned['col2'] = binned1.tolist()
+    #binned['ans'] = synth.iloc[:,2].to_list()
+    #print(binned)
+    #binned.to_csv('SYNTH_BINNED.csv'.format(i))
+    #data = {
+    binned = pd.DataFrame({'col1': binned0.tolist(), 'col2': binned1.tolist(), 'ans': synth.iloc[:,2]})
+#print(binned)
+
 #https://machinelearningmastery.com/information-gain-and-mutual-information/
 def calculate_entropy(column_name):
         entropy = 0
@@ -69,6 +97,8 @@ def ID3(data,trainData,features,target = "ans",rootNode = None):
         bestFeat = features[bestFeat_index]
         #print(bestFeatVal)
         decTree = {bestFeat:{}}
+        #initialize decTree
+        #print(decTree)
         #this part takes out the best featval before recursing so it doesnt build the same exact tree and get a weird run time errors
         #print(features)
         features = [i for i in features if i != bestFeat]
@@ -128,38 +158,11 @@ synth = pd.read_csv('synthetic-1.csv', header = None)
 #https://www.statology.org/numpy-digitize/
 
 #*** CAROLINE JORDAN AND THOMAS DIMENY HELPED ME WITH BINNING ***
-
-for i in range(len(synth)):
-    
-    max0 = synth.iloc[:,0].max()
-    max1 = synth.iloc[:,1].max()
-    min0 = synth.iloc[:,0].min()
-    min1 = synth.iloc[:,1].min()
-    
-    interval0 = np.linspace(min0, max0, 5)
-    interval1 = np.linspace(min1, max1, 5)
-    
-    col0 = synth.iloc[:,0].values
-    col1 = synth.iloc[:,1].values
-    
-    binned0 = np.digitize(col0, interval0)
-    binned1 = np.digitize(col1, interval1)
-    
-    #binned = pd.DataFrame()
-    #binned['col1'] = binned0.tolist()
-    #binned['col2'] = binned1.tolist()
-    #binned['ans'] = synth.iloc[:,2].to_list()
-    #print(binned)
-    #binned.to_csv('SYNTH_BINNED.csv'.format(i))
-    #data = {
-    binned = pd.DataFrame({'col1': binned0.tolist(), 'col2': binned1.tolist(), 'ans': synth.iloc[:,2]})
-#print(binned)
-    
 print('SYNTH - 1: ')
 decTree1 = ID3(binned,binned,binned.columns[:-1])
 test(binned,decTree1, "ans")
-pp = pprint.PrettyPrinter(compact=True)
-pp.pprint(decTree1)
+#pp = pprint.PrettyPrinter(compact=True)
+#pp.pprint(decTree1)
 print('###################################################################s#')
 #print(type(binned))
 #print(synth1)
@@ -198,8 +201,8 @@ for i in range(len(synth)):
 print('SYNTH - 2: ')
 decTree2 = ID3(binned,binned,binned.columns[:-1])
 test(binned,decTree2, "ans")
-pp = pprint.PrettyPrinter(compact=True)
-pp.pprint(decTree2)
+#pp = pprint.PrettyPrinter(compact=True)
+#pp.pprint(decTree2)
 print('####################################################################')
 
 #decTree1 = ID3(synth1,binned,synth1.columns[:-1])
@@ -240,8 +243,8 @@ for i in range(len(synth)):
 print('SYNTH - 3: ')
 decTree3 = ID3(binned,binned,binned.columns[:-1])
 test(binned,decTree3, "ans")
-pp = pprint.PrettyPrinter(compact=True)
-pp.pprint(decTree3)
+#pp = pprint.PrettyPrinter(compact=True)
+#pp.pprint(decTree3)
 print('####################################################################')
 
 synth = pd.read_csv('synthetic-4.csv', header = None)
@@ -275,6 +278,6 @@ for i in range(len(synth)):
 print('SYNTH - 4: ')
 decTree4 = ID3(binned,binned,binned.columns[:-1])
 test(binned,decTree4, "ans")
-pp = pprint.PrettyPrinter(compact=True)
-pp.pprint(decTree4)
+#pp = pprint.PrettyPrinter(compact=True)
+#pp.pprint(decTree4)
 print('####################################################################')
