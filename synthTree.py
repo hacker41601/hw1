@@ -48,6 +48,7 @@ for i in range(len(synth)):
     binned = pd.DataFrame({'col1': binned0.tolist(), 'col2': binned1.tolist(), 'ans': synth.iloc[:,2]})
 #print(binned)
 
+#using base 2 b/c we think in bits, could be modified to base 10 or e for checking with the internet for accuracy purposes
 #https://machinelearningmastery.com/information-gain-and-mutual-information/
 def calculate_entropy(column_name):
         entropy = 0
@@ -283,3 +284,54 @@ test(binned,decTree4, "ans")
 #pp = pprint.PrettyPrinter(compact=True)
 #pp.pprint(decTree4)
 print('####################################################################')
+
+#how to make decision surface - ish
+#https://jakevdp.github.io/PythonDataScienceHandbook/04.04-density-and-contour-plots.html
+
+#def f(x, y):
+#   return x*y
+
+#np.linspace is to create numeric sequences
+#linspace(start int, end int, number of samples)
+#x = np.linspace(np.argmin(trainData1), np.argmax(trainData1), len(trainData1))
+#y = np.linspace(np.argmin(trainData1), np.argmax(trainData1), len(trainData1))
+
+#X, Y = np.meshgrid(x, y)
+#Z = f(X, Y)
+#plt.contour(X, Y, Z, colors='black')
+#plt.contour(X, Y, Z, 20, cmap='RdGy')
+#plt.legend(loc = "upper left")
+#plt.colorbar();
+#plt.imshow(Z, extent=[0, 5, 0, 5], origin='lower',
+#            cmap='RdGy')
+#plt.colorbar()
+#plt.show()
+
+#this didnt work for me
+'''def calculate_information_gain(data, col):
+    total = 0
+    bin1, bin2, bin3, bin4 = [], [], [], []
+    attr = data.to_numpy()
+    attrSIZE = len(attr)
+    for i in range(len(col)):
+        if col[i] == 1:
+            bin1.append(data[i])
+        elif col[i] == 2:
+            bin2.append(data[i])
+        elif col[i] == 3:
+            bin3.append(data[i])
+        elif col[i] == 4:
+            bin4.append(data[i])
+    b1len = len(bin1)
+    b2len = len(bin2)
+    b3len = len(bin3)
+    b4len = len(bin4)
+    parentEntropy = calculate_entropy(data)
+    bin1ent = calculate_entropy(bin1)
+    bin2ent = calculate_entropy(bin2)
+    bin3ent = calculate_entropy(bin3)
+    bin4ent = calculate_entropy(bin4)
+    total += parentEntropy - ((b1len/attrSIZE) *bin1ent) + ((b2len/attrSIZE) *bin2ent) + ((b3len/attrSIZE) *bin3ent) + ((b4len/attrSIZE) *bin4ent)
+    #print(total)
+    return total
+'''
