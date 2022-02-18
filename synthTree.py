@@ -42,7 +42,7 @@ def calculate_information_gain(data,split,target):
         #within the range of the number of values corresponding to the counts of the split attributes
     IG = parent - child
     return IG
-    
+
 def ID3(data,trainData,features,target = "ans",rootNode = None):
     #create root node for decTree
     #if ex are pos, return single node root with label = +
@@ -96,12 +96,14 @@ def test(data, decTree, target):
                         return predict(query,res)
                     else:
                         return res
+    #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_dict.html
+    #https://www.geeksforgeeks.org/python-pandas-dataframe-to_dict/
     queries = data.iloc[:,:-1].to_dict(orient = "records")
-    predicted = pd.DataFrame(columns=["Prediction"])
+    predicted = pd.DataFrame(columns=["pred"])
     for i in range(len(data)):
-        predicted.loc[i,"Prediction"] = predict(queries[i],decTree,1.0)
-    pred = np.sum(predicted["Prediction"] == data[target])/len(data)*100
-    print('Accuracy: ',pred,'%')
+        predicted.loc[i,"pred"] = predict(queries[i],decTree,1.0)
+    pred = np.sum(predicted["pred"] == data[target])/len(data)
+    print('Accuracy: ',pred*100,'%')
 
 synth = pd.read_csv('synthetic-1.csv', header = None)
 #print(synth)
