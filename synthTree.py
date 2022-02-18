@@ -49,29 +49,35 @@ def ID3(data,trainData,features,target = "ans",rootNode = None):
     #if ex are neg, return single node root with label = -
     #base cases
     if len(np.unique(data[target])) <= 1:
+        #print(len(np.unique(data[target])))
+        #print(np.unique(data[target])[0])
         return np.unique(data[target])[0]
     #if number of pred attr is NULL then ret single node root with label = most common val of target attr in ex
     elif len(features) == 0:
+        #print(len(features))
         return rootNode
     #else: begin
     else:
         rootNode = np.unique(data[target])[np.argmax(np.unique(data[target],return_counts=True)[1])]
+        #print(rootNode)
         for feature in features:
             featVal = [calculate_information_gain(data,feature,target)]
         #print(featVal)
-        bestFeatVal_index = np.argmax(featVal)
+        bestFeat_index = np.argmax(featVal)
         #argmax takes the argument witht emax value
         #print(bestFeatVal_index)
-        bestFeatVal = features[bestFeatVal_index]
+        bestFeat = features[bestFeat_index]
         #print(bestFeatVal)
-        decTree = {bestFeatVal:{}}
+        decTree = {bestFeat:{}}
         #this part takes out the best featval before recursing so it doesnt build the same exact tree and get a weird run time errors
-        features = [i for i in features if i != bestFeatVal]
+        #print(features)
+        features = [i for i in features if i != bestFeat]
+        #print(features)
         #A is the attribute that best classifies examples and = decdecTree attr for root
         #for each val of A:
                 #add new branch under root corresponding to test A = val
                 #let ex of val be subset of ex that have val for A
-        for val in np.unique(data[bestFeatVal]):
+        for val in np.unique(data[bestFeat]):
             best_val = val
             #if ex of val is NULL
             #add leaf to this branch with label = most common target val in the ex
@@ -82,9 +88,9 @@ def ID3(data,trainData,features,target = "ans",rootNode = None):
             else:
             #kept getting nans at this point had to include .dropna()
             #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
-                branch = data.where(data[bestFeatVal] == best_val).dropna()
+                branch = data.where(data[bestFeat] == best_val).dropna()
                 subdecTree = ID3(branch,trainData,features,target,rootNode)
-                decTree[bestFeatVal][best_val] = subdecTree
+                decTree[bestFeat][best_val] = subdecTree
         #end
         return(decTree)
 #how to use a dictionary and its keys
