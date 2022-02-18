@@ -338,3 +338,134 @@ print('####################################################################')
     #print(total)
     return total
 '''
+
+poke = pd.read_csv('pokemonStats.csv')
+legend = pd.read_csv('pokemonLegendary.csv')
+#converting the legendary csv to a list to append to new csv file where they're combined
+mayhapsLegendary = legend['Legendary'].tolist()
+#print('Legendary:', mayhapsLegendary)
+poke["Legendary"] = mayhapsLegendary
+poke.to_csv("testPKMN.csv", index = False)
+pokemon = pd.read_csv('testPKMN.csv')
+
+def ID3(data,trainData,features,target = "Legendary",rootNode = None):
+    #create root node for decTree
+    #if ex are pos, return single node root with label = +
+    #if ex are neg, return single node root with label = -
+    #base cases
+    if len(np.unique(data[target])) <= 1:
+        #print(len(np.unique(data[target])))
+        #print(np.unique(data[target])[0])
+        return np.unique(data[target])[0]
+    #if number of pred attr is NULL then ret single node root with label = most common val of target attr in ex
+    elif len(features) == 0:
+        #print(len(features))
+        return rootNode
+    #else: begin
+    else:
+        rootNode = np.unique(data[target])[np.argmax(np.unique(data[target],return_counts=True)[1])]
+        #print(rootNode)
+        for feature in features:
+            featVal = [calculate_information_gain(data,feature,target)]
+        #print(featVal)
+        bestFeat_index = np.argmax(featVal)
+        #argmax takes the argument witht emax value
+        #print(bestFeatVal_index)
+        bestFeat = features[bestFeat_index]
+        #print(bestFeatVal)
+        decTree = {bestFeat:{}}
+        #initialize decTree
+        #print(decTree)
+        #this part takes out the best featval before recursing so it doesnt build the same exact tree and get a weird run time errors
+        #print(features)
+        features = [i for i in features if i != bestFeat]
+        #print(features)
+        #A is the attribute that best classifies examples and = decdecTree attr for root
+        #for each val of A:
+                #add new branch under root corresponding to test A = val
+                #let ex of val be subset of ex that have val for A
+        for val in np.unique(data[bestFeat]):
+            best_val = val
+            #if ex of val is NULL
+            #add leaf to this branch with label = most common target val in the ex
+            if best_val == None:
+                return
+            #else:
+                    #below this branch add subdecTree ID3(ex(v), target, attr-{A})
+            else:
+            #kept getting nans at this point had to include .dropna()
+            #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+                branch = data.where(data[bestFeat] == best_val).dropna()
+                #features at this point is the same as attr-{A}
+                subdecTree = ID3(branch,trainData,features,target,rootNode)
+                decTree[bestFeat][best_val] = subdecTree
+        #end
+        return(decTree)
+
+for i in range(len(pokemon)):
+    
+    max0 = pokemon.iloc[:,0].max()
+    max4 = pokemon.iloc[:,4].max()
+    min0 = pokemon.iloc[:,0].min()
+    min4 = pokemon.iloc[:,4].min()
+    
+    interval0 = np.linspace(min0, max0, 5)
+    interval4 = np.linspace(min4, max4, 5)
+    
+    col0 = pokemon.iloc[:,0].values
+    col4 = pokemon.iloc[:,4].values
+    
+    binned0 = np.digitize(col0, interval0)
+    binned4 = np.digitize(col4, interval4)
+    
+    #binned = pd.DataFrame()
+    #binned['col1'] = binned0.tolist()
+    #binned['col2'] = binned1.tolist()
+    #binned['ans'] = pokemon.iloc[:,2].to_list()
+    #print(binned)
+    #binned.to_csv('pokemon_BINNED.csv'.format(i))
+    #data = {
+    
+    binned = pd.DataFrame({'total': binned0.tolist(), 'sp.attack': binned4.tolist(), 'Legendary': pokemon.iloc[:,44]})
+
+print(("\n"))
+print(("                                      |\n"))
+print(("                                     /|\n"))
+print(("                                   ,' |\n"))
+print(("                                  .   |\n"))
+print(("                                    | |\n"))
+print(("                                 ' '| |\n"))
+print(("                                / / | |\n"))
+print(("       _,.-\"\"--._              / /  | |\n"))
+print(("     ,'          `.           j '   ' '\n"))
+print(("   ,'              `.         ||   / ,                         ___..--,\n"))
+print(("  /                  \\        ' `.'`.-.,-\".  .       _..---\"\"'' __, ,'\n"))
+print((" /                    \\        \\` .\"`      `\"'\\   ,'\"_..--''\"\"\"'.'.'\n"))
+print((".                      .      .'-'             \\,' ,'         ,','\n"))
+print(("|                      |      ,`               ' .`         .' /\n"))
+print(("|                      |     /          ,\"`.  ' `-. _____.-' .'\n"))
+print(("'                      |..---.|,\".      | | .  .-'\"\"   __.,-'\n"))
+print((" .                   ,'       ||,|      |.' |    |\"\"`'\"\n"))
+print(("  `-._   `._.._____  |        || |      `._,'    |\n"))
+print(("      `.   .       `\".     ,'\"| \"  `'           ,+.\n"))
+print(("        \\  '         |    '   |   .....        .'  `.\n"))
+print(("         .'          '     7  \".              ,'     \\\n"))
+print(("                   ,'      |    `..        _,'      F\n"))
+print(("                  .        |,      `'----''         |\n"))
+print(("                  |      ,\"j  /                   | '\n"))
+print(("                  `     |  | .                 | `,'\n"))
+print(("                   .    |  `.|                 |/\n"))
+print(("                    `-..'   ,'                .'\n"))
+print(("                            | \\             ,''\n"))
+print(("                            |  `,'.      _,' /\n"))
+print(("                            |    | ^.  .'   /\n"))
+print(("                             `-'.' j` V    /\n"))
+print(("                                   |      /\n"))
+print(("                                   |     /\n"))
+print(("                                   |   ,'\n"))
+print(("                                    `\"\"\n"))
+print('GOTTA CATCH EM ALL: ')
+
+#this is the one with max depth 3 bc there is only two columns
+decTree = ID3(binned,binned,binned.columns[:-1])
+test(binned,decTree, "Legendary")
