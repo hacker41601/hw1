@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from math import log
 #import csv
 import pandas as pd
 import numpy as np
@@ -51,12 +52,13 @@ for i in range(len(synth)):
 #using base 2 b/c we think in bits, could be modified to base 10 or e for checking with the internet for accuracy purposes
 #https://machinelearningmastery.com/information-gain-and-mutual-information/
 def calculate_entropy(column_name):
-        entropy = 0
-        value, count = np.unique(column_name, return_counts = True)
-        probs = count/len(column_name)
-        for prob in probs:
-            entropy -= prob * math.log(prob,2)
-        return entropy
+    featLength = len(column_name)
+    value,counts = np.unique(column_name, return_counts = True)
+    probs = counts / featLength
+    ent = 0
+    for i in probs:
+        ent -= i * log(i, 2)
+    return ent
         
 #SHOULD NEVER RETURN NEGATIVE NUMBERS
 def calculate_information_gain(data,split,target):

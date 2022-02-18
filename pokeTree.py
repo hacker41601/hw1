@@ -1,4 +1,5 @@
 import math
+from math import log
 #import random
 #import csv
 import pandas as pd
@@ -14,8 +15,6 @@ mayhapsLegendary = legend['Legendary'].tolist()
 #print('Legendary:', mayhapsLegendary)
 poke["Legendary"] = mayhapsLegendary
 poke.to_csv("testPKMN.csv", index = False)
-pokemon = pd.read_csv('testPKMN.csv', names=['Total','HP','Attack','Defense','Sp. Atk','Sp. Def','Speed','Generation','Type 1_Bug','Type 1_Dark','Type 1_Dragon','Type 1_Electric','Type 1_Fairy','Type 1_Fighting','Type 1_Fire','Type 1_Flying','Type 1_Ghost','Type 1_Grass','Type 1_Ground','Type 1_Ice','Type 1_Normal','Type 1_Poison','Type 1_Psychic','Type 1_Rock','Type 1_Steel','Type 1_Water','Type 2_Bug','Type 2_Dark','Type 2_Dragon','Type 2_Electric','Type 2_Fairy','Type 2_Fighting','Type 2_Fire','Type 2_Flying','Type 2_Ghost','Type 2_Grass','Type 2_Ground','Type 2_Ice','Type 2_Normal','Type 2_Poison','Type 2_Psychic','Type 2_Rock','Type 2_Steel','Type 2_Water', 'Legendary'])
-
 pokemon = pd.read_csv('testPKMN.csv')
 #print(pokemon)
 #print(pokemon)
@@ -91,12 +90,13 @@ for i in range(len(pokemon)):
 #print(binned)
 #using base 2 b/c we think in bits, could be modified to base 10 or e for checking with the internet for accuracy purposes
 def calculate_entropy(column_name):
-        entropy = 0
-        value, count = np.unique(column_name, return_counts = True)
-        probs = count/len(column_name)
-        for prob in probs:
-            entropy -= prob * math.log(prob,2)
-        return entropy
+    featLength = len(column_name)
+    value,counts = np.unique(column_name, return_counts = True)
+    probs = counts / featLength
+    ent = 0
+    for i in probs:
+        ent -= i * log(i, 2)
+    return ent
         
 #SHOULD NEVER RETURN NEGATIVE NUMBERS
 def calculate_information_gain(data,split,target):
