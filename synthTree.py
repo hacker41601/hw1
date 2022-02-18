@@ -7,7 +7,7 @@ from pprint import pprint
 import pprint
 import matplotlib.pyplot as plt
 import numpy as np
-#EXPLAIN!!
+
 synth1 = pd.read_csv('synthetic-1.csv', header = None)
 synth1.rename(columns = {0: 'col1', 1: 'col2', 2: 'ans'}, inplace = True)
 #synth1.to_csv('testCol1.csv', index = False)
