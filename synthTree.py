@@ -33,25 +33,24 @@ def calculate_entropy(column_name):
 def calculate_information_gain(data,split,target):
     #entropy is needed to calculate information gain and find the difference
     #value, count is reused from the entropy function but the column will be where the data splits
-    ent = calculate_entropy(data[target])
+    parent = calculate_entropy(data[target])
     val,count= np.unique(data[split],return_counts=True)
     for i in range(len(val)):
-        weighted = np.sum([(count[i]/np.sum(count))*calculate_entropy(data.where(data[split]==val[i]).dropna()[target])])
+        child = np.sum([(count[i]/np.sum(count))*calculate_entropy(data.where(data[split]==val[i]).dropna()[target])])
         #weighted entropy is the sum of the corresponding count to values divided by the summation of the counts
         #multiplied by the entropy where data is split
         #within the range of the number of values corresponding to the counts of the split attributes
-    IG = ent - weighted
+    IG = parent - child
     return IG
     
-def ID3(data,ogData,features,target = "ans",rootNode = None):
+def ID3(data,trainData,features,target = "ans",rootNode = None):
     #create root node for decTree
+    #if ex are pos, return single node root with label = +
+    #if ex are neg, return single node root with label = -
     if len(np.unique(data[target])) <= 1:
         return np.unique(data[target])[0]
     elif len(data)==0:
-        #if ex are pos, return single node root with label = +
-        #if ex are neg, return single node root with label = -
-        return np.unique(ogData[target])[np.argmax(np.unique(ogData[target],return_counts=True)[1])]
-    
+        return np.unique(trainData[target])[np.argmax(np.unique(trainData[target],return_counts=True)[1])]
     #if number of pred attr is NULL then ret single node root with label = most common val of target attr in ex
     elif len(features) ==0:
         return rootNode
@@ -78,7 +77,7 @@ def ID3(data,ogData,features,target = "ans",rootNode = None):
             #else:
                     #below this branch add subdecTree ID3(ex(v), target, attr-{A})
             sub_data = data.where(data[bestFeatVal] == val).dropna()
-            subdecTree = ID3(sub_data,ogData,features,target,rootNode)
+            subdecTree = ID3(sub_data,trainData,features,target,rootNode)
             decTree[bestFeatVal][val] = subdecTree
         #end
         #return Root
