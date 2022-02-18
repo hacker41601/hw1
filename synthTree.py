@@ -1,12 +1,11 @@
+import numpy as np
 import math
-import random
-import csv
+#import csv
 import pandas as pd
 import numpy as np
 from pprint import pprint
 import pprint
-import matplotlib.pyplot as plt
-import numpy as np
+#import matplotlib.pyplot as plt
 
 synth1 = pd.read_csv('synthetic-1.csv', header = None)
 synth1.rename(columns = {0: 'col1', 1: 'col2', 2: 'ans'}, inplace = True)
@@ -21,6 +20,7 @@ synth3.rename(columns = {0: 'col1', 1: 'col2', 2: 'ans'}, inplace = True)
 synth4 = pd.read_csv('synthetic-4.csv', header = None)
 synth4.rename(columns = {0: 'col1', 1: 'col2', 2: 'ans'}, inplace = True)
 
+#https://machinelearningmastery.com/information-gain-and-mutual-information/
 def calculate_entropy(column_name):
         entropy = 0
         value, count = np.unique(column_name, return_counts = True)
@@ -47,44 +47,52 @@ def ID3(data,trainData,features,target = "ans",rootNode = None):
     #create root node for decTree
     #if ex are pos, return single node root with label = +
     #if ex are neg, return single node root with label = -
+    #base cases
     if len(np.unique(data[target])) <= 1:
         return np.unique(data[target])[0]
-    elif len(data)==0:
-        return np.unique(trainData[target])[np.argmax(np.unique(trainData[target],return_counts=True)[1])]
     #if number of pred attr is NULL then ret single node root with label = most common val of target attr in ex
     elif len(features) ==0:
         return rootNode
     #else: begin
     else:
         rootNode = np.unique(data[target])[np.argmax(np.unique(data[target],return_counts=True)[1])]
-        featVal = [calculate_information_gain(data,feature,target) for feature in features]
+        for feature in features:
+            featVal = [calculate_information_gain(data,feature,target)]
         #print(featVal)
         bestFeatVal_index = np.argmax(featVal)
+        #argmax takes the argument witht emax value
         #print(bestFeatVal_index)
         bestFeatVal = features[bestFeatVal_index]
         #print(bestFeatVal)
         decTree = {bestFeatVal:{}}
-        #this part takes out the best featval before recursing so it doesnt build the same exact tree
+        #this part takes out the best featval before recursing so it doesnt build the same exact tree and get a weird run time errors
         features = [i for i in features if i != bestFeatVal]
         #A is the attribute that best classifies examples and = decdecTree attr for root
         #for each val of A:
                 #add new branch under root corresponding to test A = val
                 #let ex of val be subset of ex that have val for A
         for val in np.unique(data[bestFeatVal]):
-            val = val
+            best_val = val
             #if ex of val is NULL
-                    #add leaf to this branch with label = most common target val in the ex
+            #add leaf to this branch with label = most common target val in the ex
+            if best_val == None:
+                return
             #else:
                     #below this branch add subdecTree ID3(ex(v), target, attr-{A})
-            branch = data.where(data[bestFeatVal] == val).dropna()
-            subdecTree = ID3(branch,trainData,features,target,rootNode)
-            decTree[bestFeatVal][val] = subdecTree
+            else:
+            #kept getting nans at this point had to include .dropna()
+            #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+                branch = data.where(data[bestFeatVal] == best_val).dropna()
+                subdecTree = ID3(branch,trainData,features,target,rootNode)
+                decTree[bestFeatVal][best_val] = subdecTree
         #end
-        #return Root
         return(decTree)
-        
+#how to use a dictionary and its keys
+#https://stackoverflow.com/questions/37583888/how-to-find-a-particular-key-in-list-of-dictionary-objects-in-python
+#https://python-course.eu/machine-learning/regression-trees-in-python.php
+#it isnt a regression tree but it's still a predict function
 def test(data, decTree, target):
-    def predict(query,decTree, default = 1):
+    def predict(query,decTree):
             for key in list(query.keys()):
                 if key in list(decTree.keys()):
                     try:
@@ -99,10 +107,12 @@ def test(data, decTree, target):
     #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_dict.html
     #https://www.geeksforgeeks.org/python-pandas-dataframe-to_dict/
     queries = data.iloc[:,:-1].to_dict(orient = "records")
-    predicted = pd.DataFrame(columns=["pred"])
+    prediction = pd.DataFrame(columns=["ans"])
     for i in range(len(data)):
-        predicted.loc[i,"pred"] = predict(queries[i],decTree,1.0)
-    pred = np.sum(predicted["pred"] == data[target])/len(data)
+        prediction.loc[i,"ans"] = predict(queries[i],decTree)
+    
+    pred = np.sum(prediction["ans"] == data[target])/len(data)
+    #print(prediction)
     print('Accuracy: ',pred*100,'%')
 
 synth = pd.read_csv('synthetic-1.csv', header = None)
