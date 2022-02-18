@@ -36,7 +36,7 @@ def calculate_information_gain(data,split,target):
     parent = calculate_entropy(data[target])
     val,count= np.unique(data[split],return_counts=True)
     for i in range(len(val)):
-        child = np.sum([(count[i]/np.sum(count))*calculate_entropy(data.where(data[split]==val[i]).dropna()[target])])
+        child = np.sum([(count[i]/np.sum(count))*calculate_entropy(data.where(data[split]==val[i])[target])])
         #weighted entropy is the sum of the corresponding count to values divided by the summation of the counts
         #multiplied by the entropy where data is split
         #within the range of the number of values corresponding to the counts of the split attributes
