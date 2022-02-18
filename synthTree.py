@@ -126,7 +126,7 @@ def ID3(data,trainData,features,target = "ans",rootNode = None):
 #how to use a dictionary and its keys
 #https://stackoverflow.com/questions/37583888/how-to-find-a-particular-key-in-list-of-dictionary-objects-in-python
 #https://python-course.eu/machine-learning/regression-trees-in-python.php
-#it isnt a regression tree but it's still a predict function
+#it isnt a regression tree but it's still a predict function that worked with mine!!
 def test(data, decTree, target):
     def predict(query,decTree):
             for key in list(query.keys()):
@@ -139,6 +139,7 @@ def test(data, decTree, target):
                     if isinstance(res,dict):
                         return predict(query,res)
                     else:
+                        #print(res)
                         return res
     #https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_dict.html
     #https://www.geeksforgeeks.org/python-pandas-dataframe-to_dict/
@@ -146,8 +147,9 @@ def test(data, decTree, target):
     prediction = pd.DataFrame(columns=["ans"])
     for i in range(len(data)):
         prediction.loc[i,"ans"] = predict(queries[i],decTree)
-    
+        
     pred = np.sum(prediction["ans"] == data[target])/len(data)
+    #print(pred)
     #print(prediction)
     print('Accuracy: ',pred*100,'%')
 
