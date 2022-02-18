@@ -6,7 +6,7 @@ import pandas as pd
 from pprint import pprint
 import pprint
 #import matplotlib.pyplot as plt
-
+#BEGIN SYNTH DATA PORTION
 synth1 = pd.read_csv('synthetic-1.csv', header = None)
 synth1.rename(columns = {0: 'col1', 1: 'col2', 2: 'ans'}, inplace = True)
 #synth1.to_csv('testCol1.csv', index = False)
@@ -338,7 +338,7 @@ print('####################################################################')
     #print(total)
     return total
 '''
-
+#BEGIN POKEMON PORTION
 poke = pd.read_csv('pokemonStats.csv')
 legend = pd.read_csv('pokemonLegendary.csv')
 #converting the legendary csv to a list to append to new csv file where they're combined
